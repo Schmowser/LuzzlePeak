@@ -82,10 +82,11 @@ void Game::Update(GLfloat dt)
 	Match rowMatch = checkRowMatch(Board->BlockMatrix);
 
 	// MATCH CHECK II: Check whether there is a 3-Match in a col
+	Match colMatch = checkColMatch(Board->BlockMatrix);
 
 	// Destroy matched blocks
-	if (std::get<0>(rowMatch))
-		destroyBlocks(Board->BlockMatrix, rowMatch);
+	if (std::get<0>(rowMatch) || std::get<0>(colMatch))
+		destroyBlocks(Board->BlockMatrix, rowMatch, colMatch);
 }
 
 // =========================
@@ -253,54 +254,144 @@ Match Game::checkRowMatch(std::vector<std::vector<GLuint>> &matrix)
 	GLuint match_col = 0;				// And where does it start?
 	GLuint match_length = 0;			// And how long is it?
 
+	// Create output Match object
+	Match output_match = std::make_tuple(GL_FALSE, 0, 0, 0);
+
 	// currentBlockType stores the type of match we are currently looking for
-	GLuint currentBlockType = 0;
+	GLuint currentBlockType = -1;
 
 	GLuint rowSize = matrix.size();
 	GLuint colSize = matrix[0].size();
 
 	for (GLuint row = 0; row < rowSize; row++)
 	{
+		// New row sets currentBlockType and match_length to a default value
+		currentBlockType = -1;
+		match_length = 0;
+
 		for (GLuint col = 0; col < colSize; col++)
 		{
-			// If currernt entry is non-zero, there could be a match
+			// If current entry is non-zero, there could be a match
 			if (matrix[row][col] != 0)
 			{
-				if (matrix[row][col] != currentBlockType)
+
+				// If current block is of same type as the left one, increment match_length
+				if (matrix[row][col] == currentBlockType)
+					match_length++;
+				else
+					// Otherwise: Set the match parameters to initial state
 				{
-					// Check whether there was a match longer than two
-					if (match_length >= 3)
-					{
-						match = GL_TRUE;
-						return std::make_tuple(match, match_row, match_col, match_length);
-					}
-					currentBlockType = matrix[row][col];
+					match = GL_FALSE;
+					match_length = 1;
 					match_row = row;
 					match_col = col;
-					match_length = 1;
+					currentBlockType = matrix[row][col];
 				}
-				else
+
+				// Check whether there was a match longer than two
+				if (match_length >= 3)
 				{
-					match_length++;
+					match = GL_TRUE;
+					output_match = std::make_tuple(match, match_row, match_col, match_length);
 				}
+
+			}
+			else
+			{
+				// If there is a zero, we set match_length back to 0
+				match = GL_FALSE;
+				match_length = 0;
 			}
 		}
 	}
 
-	return std::make_tuple(match, match_row, match_col, match_length);	// { MATCH ? , rowIdx, colIdx, length }
+	return output_match;	// { MATCH ? , rowIdx, colIdx, length }
 }
 
 // ===========================
-//	MATCH CHECK: Part I (Rows)
+//	MATCH CHECK: Part II (Columns)
 // ===========================
 
-void Game::destroyBlocks(std::vector<std::vector<GLuint>> &matrix, Match rowMatch)
+Match Game::checkColMatch(std::vector<std::vector<GLuint>> &matrix)
+{
+	GLboolean match = GL_FALSE;			// Is there a match?
+	GLuint match_row = 0;				// Where does it start?
+	GLuint match_col = 0;				// In which col?
+	GLuint match_length = 0;			// And how long is it?
+
+										// Create output Match object
+	Match output_match = std::make_tuple(GL_FALSE, 0, 0, 0);
+
+	// currentBlockType stores the type of match we are currently looking for
+	GLuint currentBlockType = -1;
+
+	GLuint rowSize = matrix.size();
+	GLuint colSize = matrix[0].size();
+
+	for (GLuint col = 0; col < colSize; col++)
+	{
+		// New row sets currentBlockType and match_length to a default value
+		currentBlockType = -1;
+		match_length = 0;
+
+		for (GLuint row = 0; row < rowSize; row++)
+		{
+			// If current entry is non-zero, there could be a match
+			if (matrix[row][col] != 0)
+			{
+
+				// If current block is of same type as the left one, increment match_length
+				if (matrix[row][col] == currentBlockType)
+					match_length++;
+				else
+					// Otherwise: Set the match parameters to initial state
+				{
+					match = GL_FALSE;
+					match_length = 1;
+					match_row = row;
+					match_col = col;
+					currentBlockType = matrix[row][col];
+				}
+
+				// Check whether there was a match longer than two
+				if (match_length >= 3)
+				{
+					match = GL_TRUE;
+					output_match = std::make_tuple(match, match_row, match_col, match_length);
+				}
+
+			}
+			else
+			{
+				// If there is a zero, we set match_length back to 0
+				match = GL_FALSE;
+				match_length = 0;
+			}
+		}
+	}
+
+	return output_match;	// { MATCH ? , rowIdx, colIdx, length }
+}
+
+void Game::destroyBlocks(std::vector<std::vector<GLuint>> &matrix, Match rowMatch, Match colMatch)
 {
 	// Destroying rowMatch
-	GLuint rowMatchRow = std::get<1>(rowMatch);
-	GLuint rowMatchCol = std::get<2>(rowMatch);
-	for (GLuint k = 0; k < std::get<3>(rowMatch); k++)
-		matrix[rowMatchRow][rowMatchCol + k] = 0;
+	if (std::get<0>(rowMatch))
+	{
+		GLuint rowMatchRow = std::get<1>(rowMatch);
+		GLuint rowMatchCol = std::get<2>(rowMatch);
+		for (GLuint k = 0; k < std::get<3>(rowMatch); k++)
+			matrix[rowMatchRow][rowMatchCol + k] = 0;
+	}
+
+	// Destroying colMatch
+	if (std::get<0>(colMatch))
+	{
+		GLuint colMatchRow = std::get<1>(colMatch);
+		GLuint colMatchCol = std::get<2>(colMatch);
+		for (GLuint k = 0; k < std::get<3>(colMatch); k++)
+			matrix[colMatchRow + k][colMatchCol] = 0;
+	}
 }
 
 // Calculates which direction a vector is facing (N_orth, E_ast, S_outh, W_est)

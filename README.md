@@ -13,6 +13,8 @@ Space	Swap blocks denoted by cursor
 
 TODO:
 
-Remove bugs from RowMatch (sometimes randomly destroys blocks)
-ColMatch
 Renaming directories
+Swap and fall animations
+Score counting
+Formulating a goal (for example: clearing the board)
+Multiplayer (additional human player or AI opponent)

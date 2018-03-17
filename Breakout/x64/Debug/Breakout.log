@@ -1,12 +1,3 @@
-﻿  Game.cpp
-c:\users\coolibri\documents\visual studio 2015\projects\luzzlepeak\breakout\game.cpp(151): warning C4244: 'argument': conversion from 'float' to 'GLuint', possible loss of data
-c:\users\coolibri\documents\visual studio 2015\projects\luzzlepeak\breakout\game.cpp(187): warning C4244: 'argument': conversion from 'double' to 'GLuint', possible loss of data
-c:\users\coolibri\documents\visual studio 2015\projects\luzzlepeak\breakout\game.cpp(204): warning C4267: 'initializing': conversion from 'size_t' to 'GLuint', possible loss of data
-c:\users\coolibri\documents\visual studio 2015\projects\luzzlepeak\breakout\game.cpp(205): warning C4267: 'initializing': conversion from 'size_t' to 'GLuint', possible loss of data
-c:\users\coolibri\documents\visual studio 2015\projects\luzzlepeak\breakout\game.cpp(259): warning C4267: 'initializing': conversion from 'size_t' to 'GLuint', possible loss of data
-c:\users\coolibri\documents\visual studio 2015\projects\luzzlepeak\breakout\game.cpp(260): warning C4267: 'initializing': conversion from 'size_t' to 'GLuint', possible loss of data
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  main.cpp
-  Breakout.vcxproj -> C:\Users\Coolibri\Documents\Visual Studio 2015\Projects\LuzzlePeak\x64\Debug\LuzzlePeak.exe
-  Breakout.vcxproj -> C:\Users\Coolibri\Documents\Visual Studio 2015\Projects\LuzzlePeak\x64\Debug\LuzzlePeak.pdb (Partial PDB)
+﻿  game_board.cpp
+  Breakout.vcxproj -> C:\Users\Coolibri\Documents\GitHub\LuzzlePeak\x64\Debug\LuzzlePeak.exe
+  Breakout.vcxproj -> C:\Users\Coolibri\Documents\GitHub\LuzzlePeak\x64\Debug\LuzzlePeak.pdb (Partial PDB)

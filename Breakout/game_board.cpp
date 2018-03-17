@@ -46,16 +46,27 @@ void GameBoard::Draw(SpriteRenderer &renderer)
 			{
 				glm::vec2 pos(Position.x + 75 * col, Position.y - 75 * (Size.x - row - 1));		// Because y-Position is mirrored we consider -
 				glm::vec2 size(75, 75);
-				if (blockType == 1)
+
+				// blockType determines color of block
+				Texture2D sprite;
+				switch (blockType)
 				{
-					GameObject obj(pos, size, ResourceManager::GetTexture("blue"), glm::vec3(1.0f, 1.0f, 1.0f));
-					obj.Draw(renderer);
+				case 1: 
+					sprite = ResourceManager::GetTexture("blue");
+					break;
+				case 2:
+					sprite = ResourceManager::GetTexture("purple");
+					break;
+				case 3:
+					sprite = ResourceManager::GetTexture("green");
+					break;
+				default:
+					break;
 				}
-				else
-				{
-					GameObject obj(pos, size, ResourceManager::GetTexture("purple"), glm::vec3(1.0f, 1.0f, 1.0f));
-					obj.Draw(renderer);
-				}
+
+				// Create game object and draw it
+				GameObject obj(pos, size, sprite, glm::vec3(1.0f, 1.0f, 1.0f));
+				obj.Draw(renderer);
 			}
 		}
 	}

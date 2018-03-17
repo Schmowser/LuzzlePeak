@@ -65,7 +65,8 @@ public:
 	// Check functions
 	void checkGravity(std::vector<std::vector<GLuint>> &matrix);
 	Match checkRowMatch(std::vector<std::vector<GLuint>> &matrix);
-	void destroyBlocks(std::vector<std::vector<GLuint>> &matrix, Match rowMatch);
+	Match checkColMatch(std::vector<std::vector<GLuint>> &matrix);
+	void destroyBlocks(std::vector<std::vector<GLuint>> &matrix, Match rowMatch, Match colMatch);
 
 };
 
